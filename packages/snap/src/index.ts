@@ -1,36 +1,34 @@
-import type { OnRpcRequestHandler } from '@metamask/snaps-sdk';
-import { panel, text } from '@metamask/snaps-sdk';
+import type { OnHomePageHandler } from '@metamask/snaps-sdk';
+import { panel, heading, text, divider } from '@metamask/snaps-sdk';
+import { InternalError } from '@metamask/snaps-sdk';
 
-/**
- * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
- *
- * @param args - The request handler args as object.
- * @param args.origin - The origin of the request, e.g., the website that
- * invoked the snap.
- * @param args.request - A validated JSON-RPC request object.
- * @returns The result of `snap_dialog`.
- * @throws If the request method is not valid for this snap.
- */
-export const onRpcRequest: OnRpcRequestHandler = async ({
-  origin,
-  request,
-}) => {
-  switch (request.method) {
-    case 'hello':
-      return snap.request({
-        method: 'snap_dialog',
-        params: {
-          type: 'confirmation',
-          content: panel([
-            text(`Hello, **${origin}**!`),
-            text('This custom confirmation is just for display purposes.'),
-            text(
-              'But you can edit the snap source code to make it do something, if you want to!',
-            ),
-          ]),
-        },
-      });
-    default:
-      throw new Error('Method not found.');
-  }
+async function getLatestFoxTales() { 
+  return (await fetch("https://foxtales.vercel.app/api/tales")).json(); 
+}
+
+export const onHomePage: OnHomePageHandler = async () => {
+  return getLatestFoxTales().then(rows => {
+    // format data! 
+    try { 
+      const feed = rows.map((row:any) => { 
+        const tale = JSON.parse(row.tale); 
+        return [
+          divider(),
+          text(`**${tale.title}**`), 
+          text(`by ${tale.author.display_name} [ ](https://warpcast.com/~/compose?text=Play%20this%20FoxTale!&embeds[]=https://foxtales.vercel.app/api/${row.id})`),
+        ]; 
+      }); 
+      
+      return { content:  panel([
+        heading("Latest FoxTales"), 
+        ...feed.flat(),
+        divider(),
+        text("[Make Your Own](https://foxtales.vercel.app)"),
+      ]) };
+    }
+    catch (error) { 
+      console.log(error); 
+      throw new InternalError(); 
+    }
+  }); 
 };
