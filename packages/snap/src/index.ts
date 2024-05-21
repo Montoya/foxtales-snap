@@ -12,10 +12,11 @@ export const onHomePage: OnHomePageHandler = async () => {
     try { 
       const feed = rows.map((row:any) => { 
         const tale = JSON.parse(row.tale); 
+        const url = `https://warpcast.com/~/compose?text=${encodeURIComponent(`Play ${tale.title} by ${tale.author.display_name}!`)}&embeds[]=https://foxtales.vercel.app/api/${row.id}`; 
         return [
           divider(),
           text(`**${tale.title}**`), 
-          text(`by ${tale.author.display_name} [ ](https://warpcast.com/~/compose?text=Play%20this%20FoxTale!&embeds[]=https://foxtales.vercel.app/api/${row.id})`),
+          text(`by ${tale.author.display_name} [ ](${url})`),
         ]; 
       }); 
       

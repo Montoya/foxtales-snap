@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Enjoy FoxTales",
   "proposedName": "FoxTales",
   "repository": {
@@ -7,7 +7,7 @@
     "url": "https://github.com/MetaMask/template-snap-monorepo.git"
   },
   "source": {
-    "shasum": "hQLeL2oF2kgMg5Gg/Tv/cyc1iI/RPB9wil/AiUuA3g0=",
+    "shasum": "+x56yufQF8x+g6m23JrFqf7SFXMgAykv9+j8yY2kC3w=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
